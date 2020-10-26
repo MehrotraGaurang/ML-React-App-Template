@@ -27,7 +27,8 @@ model = app.model('Prediction params',
 				  							description="Select 3", 
     					  				 	help="Select 3 cannot be blank")})
 
-# classifier = joblib.load('classifier.joblib')
+classifier = joblib.load(open('classifier.pkl', 'rb')) # Will load classifier saved as pickle from current dir
+sample_data = # You can input sample data here. I took the first row of X_test that was injested into logistic regression model
 
 @name_space.route("/")
 class MainClass(Resource):
@@ -44,7 +45,8 @@ class MainClass(Resource):
 		try: 
 			formData = request.json
 			data = [val for val in formData.values()]
-			# prediction = classifier.predict(data)
+			prediction = classifier.predict_proba(sample_data) # Or do data-cleaning on input data and sent it for prediction
+                        output = "{:0.2f}".format((prediction[0][1] * 100), 2)
 			response = jsonify({
 				"statusCode": 200,
 				"status": "Prediction made",
